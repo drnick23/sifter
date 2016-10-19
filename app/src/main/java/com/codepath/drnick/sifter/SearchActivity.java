@@ -1,31 +1,67 @@
 package com.codepath.drnick.sifter;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.Toast;
+
+import com.codepath.drnick.sifter.activities.ArticleActivity;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnItemClick;
+import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
+
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.etQuery) EditText etQuery;
+    @BindView(R.id.btnSearch) Button btnSearch;
+    @BindView(R.id.gvResults) GridView gvResults;
+
+    ArrayList<Article> articleList;
+    ArticleArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        articleList = new ArrayList<>();
+        adapter = new ArticleArrayAdapter(this, articleList);
+        gvResults.setAdapter(adapter);
+    }
+
+    @OnItemClick(R.id.gvResults)
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d("DEBUG","onItemClick");
+        // launch new activity with article
+        Intent i = new Intent(getApplicationContext(), ArticleActivity.class);
+        Article article = articleList.get(position);
+        i.putExtra("url",article.getWebUrl());
+        startActivity(i);
     }
 
     @Override
@@ -48,5 +84,40 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onArticeSearch(View view) {
+        Log.d("DEBUG","onArticleSearch");
+        String query = etQuery.getText().toString();
+        Toast.makeText(this, "search for "+query, Toast.LENGTH_LONG).show();
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        String url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+
+        RequestParams params = new RequestParams();
+        params.put("api-key","e6ec7693b8544295a54bc6fccdd3bc7c");
+        params.put("q",query);
+        params.put("page",0);
+
+        client.get(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Log.d("DEBUG", response.toString());
+                JSONArray articleJSONResults = null;
+                try {
+                    articleJSONResults = response.getJSONObject("response").getJSONArray("docs");
+                    //articleList.addAll(Article.fromJSONArray(articleJSONResults));
+                    //adapter.notifyDataSetChanged();
+                    adapter.addAll(Article.fromJSONArray(articleJSONResults));
+                    Log.d("DEBUG", articleJSONResults.toString());
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+
     }
 }
