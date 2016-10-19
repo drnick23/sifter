@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnItemClick;
 import cz.msebera.android.httpclient.Header;
 
@@ -91,7 +92,8 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
-    public void onArticeSearch(View view) {
+    @OnClick(R.id.btnSearch)
+    public void onArticleSearch(View view) {
         Log.d("DEBUG","onArticleSearch");
         String query = etQuery.getText().toString();
         Toast.makeText(this, "search for "+query, Toast.LENGTH_LONG).show();
