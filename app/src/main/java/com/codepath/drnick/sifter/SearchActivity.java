@@ -22,6 +22,7 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -60,7 +61,7 @@ public class SearchActivity extends AppCompatActivity {
         // launch new activity with article
         Intent i = new Intent(getApplicationContext(), ArticleActivity.class);
         Article article = articleList.get(position);
-        i.putExtra("url",article.getWebUrl());
+        i.putExtra("article", Parcels.wrap(article));
         startActivity(i);
     }
 

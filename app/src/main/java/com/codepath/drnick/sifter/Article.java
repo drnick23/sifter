@@ -3,13 +3,14 @@ package com.codepath.drnick.sifter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 
 /**
  * Created by nick on 10/18/16.
  */
-
+@Parcel
 public class Article {
 
     public String getWebUrl() {
@@ -27,6 +28,9 @@ public class Article {
     String webUrl;
     String headline;
     String thumbnail;
+
+    // required by Parcel
+    public Article() {}
 
     public Article(JSONObject jsonObject) {
         try {
