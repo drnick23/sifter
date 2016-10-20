@@ -2,10 +2,11 @@
 
 Sifter is an android app that allows a user to search for articles on web using simple filters. The app utilizes [New York Times Search API](http://developer.nytimes.com/docs/read/article_search_api_v2).
 
-Time spent: 9.5 hours spent in total
+Time spent: 11 hours spent in total
 - First session: 2.5 hours
 - Parcel, Intents, Toolbar: 2 hours
 - Filter, Pagination, Networking: 4 hours
+- Filter date & picker, network utils: 1.5 hours
 
 ## User Stories
 
@@ -14,16 +15,16 @@ The following **required** functionality is completed:
 * [x] User can **search for news article** by specifying a query and launching a search. Search displays a grid of image results from the New York Times Search API.
 * [x] User can click on "settings" which allows selection of **advanced search options** to filter results
 * [x] User can configure advanced search filters such as:
-  * [ ] Begin Date (using a date picker)
+  * [x] Begin Date (using a date picker)
   * [x] News desk values (Arts, Fashion & Style, Sports)
   * [x] Sort order (oldest or newest)
-* [ ] Subsequent searches have any filters applied to the search results
+* [x] Subsequent searches have any filters applied to the search results
 * [x] User can tap on any image in results to see the full text of article **full-screen**
 * [x] User can **scroll down to see more articles**. The maximum number of articles is limited by the API search.
 
 The following **optional** features are implemented:
 
-* [ ] Implements robust error handling, [check if internet is available](http://guides.codepath.com/android/Sending-and-Managing-Network-Requests#checking-for-network-connectivity), handle error cases, network failures
+* [x] Implements robust error handling, [check if internet is available](http://guides.codepath.com/android/Sending-and-Managing-Network-Requests#checking-for-network-connectivity), handle error cases, network failures
 * [ ] Used the **ActionBar SearchView** or custom layout as the query box instead of an EditText
 * [ ] User can **share an article link** to their friends or email it to themselves
 * [ ] Replaced Filter Settings Activity with a lightweight modal overlay
