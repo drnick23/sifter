@@ -4,7 +4,11 @@ import android.text.TextUtils;
 
 import org.parceler.Parcel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by nick on 10/19/16.
@@ -13,12 +17,20 @@ import java.util.ArrayList;
 @Parcel
 public class SearchFilters {
 
-    public String getBeginDate() {
+    public Date getBeginDate() {
         return beginDate;
     }
 
-    public void setBeginDate(String beginDate) {
+    public void setBeginDate(Date beginDate) {
         this.beginDate = beginDate;
+    }
+
+    public void setBeginDate(int year, int month, int dayOfMonth) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        beginDate = calendar.getTime();
     }
 
     public void setSort(String sort) {
@@ -42,12 +54,29 @@ public class SearchFilters {
         return "news_desk:("+spacedQuotedItems+")";
     }
 
-    String beginDate;
+    public String getBeginDateForQuery() {
+        java.text.DateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+        return df.format(beginDate);
+    }
+
+    public String getBeginDateForUserDisplay() {
+        if (beginDate == null) {
+            return "";
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(beginDate);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        return month + "/" + day + "/" + year;
+    }
+
+    Date beginDate;
     String sort;
     ArrayList<String> newsDesk;
 
     public SearchFilters() {
-        beginDate = "";
+        beginDate = null;
         sort = "newest";
         newsDesk = new ArrayList<>();
     }

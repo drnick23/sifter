@@ -1,5 +1,6 @@
 package com.codepath.drnick.sifter.activities;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 
@@ -25,8 +28,9 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 
-public class FilterActivity extends AppCompatActivity {
+public class FilterActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    @BindView(R.id.etBeginDate) EditText etBeginDate;
     @BindView(R.id.spSortOrder) Spinner spSortOrder;
     @BindView(R.id.cbArts) CheckBox cbArts;
     @BindView(R.id.cbFashion) CheckBox cbFashion;
@@ -47,11 +51,12 @@ public class FilterActivity extends AppCompatActivity {
 
         searchFilters = (SearchFilters) Parcels.unwrap(getIntent().getParcelableExtra("searchFilters"));
 
-        mapInputsToSearchFilter();
+        mapSearchFilterIntoInputs();
 
     }
 
-    void mapInputsToSearchFilter() {
+    void mapSearchFilterIntoInputs() {
+        etBeginDate.setText(searchFilters.getBeginDateForUserDisplay());
         setSpinnerToValue(spSortOrder, searchFilters.getSort());
         for (String news : searchFilters.getNewsDesk()) {
             Log.d("DEBUG", "news item: " + news);
@@ -63,9 +68,10 @@ public class FilterActivity extends AppCompatActivity {
                 cbSports.setChecked(true);
             }
         }
+
     }
 
-    void mapSearchFilterToInputs() {
+    void mapInputsIntoSearchFilter() {
         // update the searchFilter based on all our inputs
         ArrayList<String> news = new ArrayList<>();
         if (cbArts.isChecked()) {
@@ -82,9 +88,25 @@ public class FilterActivity extends AppCompatActivity {
         searchFilters.setBeginDate(null);
     }
 
+    @OnClick(R.id.etBeginDate)
+    public void showDatePickerDialog(View v) {
+        Log.d("DEBUG", "TODO: date picker fragment");
+        //DatePickerFragment newFragment = new DatePickerFragment();
+        //newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        // when setting date, set the search filters now instead of mapping at the end...
+        //etBeginDate.setText(month+"/"+dayOfMonth+"/"+year);
+        searchFilters.setBeginDate(year,month,dayOfMonth);
+        etBeginDate.setText(searchFilters.getBeginDateForQuery());
+    }
+
     @OnClick(R.id.btSave)
     public void onSave() {
-        mapSearchFilterToInputs();
+        mapInputsIntoSearchFilter();
         // passback data
         Intent data = new Intent();
         data.putExtra("searchFilters", Parcels.wrap(searchFilters));
