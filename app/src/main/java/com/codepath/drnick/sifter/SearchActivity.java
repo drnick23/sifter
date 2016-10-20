@@ -16,13 +16,11 @@ import android.widget.Toast;
 
 import com.codepath.drnick.sifter.activities.ArticleActivity;
 import com.codepath.drnick.sifter.activities.FilterActivity;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+import com.codepath.drnick.sifter.models.SearchFilters;
+import com.codepath.drnick.sifter.network.FetchArticlesCallback;
+import com.codepath.drnick.sifter.network.FetchArticlesRequest;
+import com.codepath.drnick.sifter.network.NYTRestClient;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
@@ -31,7 +29,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
-import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -41,6 +38,7 @@ public class SearchActivity extends AppCompatActivity {
     @BindView(R.id.gvResults) GridView gvResults;
 
     ArrayList<Article> articleList;
+    SearchFilters searchFilters;
     ArticleArrayAdapter adapter;
 
     @Override
@@ -52,9 +50,18 @@ public class SearchActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
+        searchFilters = new SearchFilters();
         articleList = new ArrayList<>();
         adapter = new ArticleArrayAdapter(this, articleList);
         gvResults.setAdapter(adapter);
+
+        gvResults.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                fetchAndAppendArticles(page);
+                return true;
+            }
+        });
     }
 
     @OnItemClick(R.id.gvResults)
@@ -96,35 +103,40 @@ public class SearchActivity extends AppCompatActivity {
         Log.d("DEBUG","onArticleSearch");
         String query = etQuery.getText().toString();
         Toast.makeText(this, "search for "+query, Toast.LENGTH_LONG).show();
+        articleList.clear();
+        adapter.notifyDataSetChanged();
+        fetchAndAppendArticles(0);
+    }
 
-        AsyncHttpClient client = new AsyncHttpClient();
-        String url = "https://api.nytimes.com/svc/search/v2/articlesearch.json";
+    public void fetchAndAppendArticles(int page) {
+        String query = etQuery.getText().toString();
 
-        RequestParams params = new RequestParams();
-        params.put("api-key","e6ec7693b8544295a54bc6fccdd3bc7c");
-        params.put("q",query);
-        params.put("page",0);
+        FetchArticlesRequest request = new FetchArticlesRequest();
+        request.setQuery(query);
+        request.setPage(page);
+        request.setSearchFilters(searchFilters);
 
-        client.get(url, params, new JsonHttpResponseHandler() {
+        Log.d("DEBUG","Query: "+query+" page:"+page);
+
+        NYTRestClient.fetchArticles(request, new FetchArticlesCallback() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                Log.d("DEBUG", response.toString());
-                JSONArray articleJSONResults = null;
-                try {
-                    articleJSONResults = response.getJSONObject("response").getJSONArray("docs");
-                    //articleList.addAll(Article.fromJSONArray(articleJSONResults));
-                    //adapter.notifyDataSetChanged();
-                    adapter.addAll(Article.fromJSONArray(articleJSONResults));
-                    Log.d("DEBUG", articleJSONResults.toString());
-                }
-                catch (JSONException e){
-                    e.printStackTrace();
-                }
+            public void onSuccess(ArrayList<Article> articleList) {
+                adapter.addAll(articleList);
+            }
+
+            @Override
+            public void onError(Error error) {
+                Log.d("ERROR","Problem fetching articles");
             }
         });
     }
 
-    // our activity launchers
+    //
+    // Activity Launchers
+    //
+    private final int LAUNCH_FILTER_ACITIVTY_REQUEST_CODE = 101;
+
+
     public void launchArticleActivity(Article article) {
         Intent i = new Intent(getApplicationContext(), ArticleActivity.class);
         i.putExtra("article", Parcels.wrap(article));
@@ -133,6 +145,22 @@ public class SearchActivity extends AppCompatActivity {
 
     public void launchFilterActivity() {
         Intent i = new Intent(getApplicationContext(), FilterActivity.class);
-        startActivity(i);
+        i.putExtra("searchFilters", Parcels.wrap(searchFilters));
+        startActivityForResult(i,LAUNCH_FILTER_ACITIVTY_REQUEST_CODE);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // ignore any results that were cancelled
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+
+        // now handle any recognized results
+        if (requestCode == LAUNCH_FILTER_ACITIVTY_REQUEST_CODE) {
+            searchFilters = (SearchFilters) Parcels.unwrap(data.getParcelableExtra("searchFilters"));
+            Toast.makeText(this, "Updated search settings", Toast.LENGTH_LONG).show();
+        }
+    }
+
 }
