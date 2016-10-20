@@ -15,6 +15,7 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.codepath.drnick.sifter.activities.ArticleActivity;
+import com.codepath.drnick.sifter.activities.FilterActivity;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -60,10 +61,7 @@ public class SearchActivity extends AppCompatActivity {
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.d("DEBUG","onItemClick");
         // launch new activity with article
-        Intent i = new Intent(getApplicationContext(), ArticleActivity.class);
-        Article article = articleList.get(position);
-        i.putExtra("article", Parcels.wrap(article));
-        startActivity(i);
+        launchArticleActivity(articleList.get(position));
     }
 
     @Override
@@ -84,6 +82,7 @@ public class SearchActivity extends AppCompatActivity {
             case R.id.miFilter:
                 // launch the filter settings activity
                 Log.d("DEBUG","TODO: launch filter settings");
+                launchFilterActivity();
                 return true;
             case R.id.action_settings:
                 return true;
@@ -123,8 +122,17 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
+    // our activity launchers
+    public void launchArticleActivity(Article article) {
+        Intent i = new Intent(getApplicationContext(), ArticleActivity.class);
+        i.putExtra("article", Parcels.wrap(article));
+        startActivity(i);
+    }
 
-
+    public void launchFilterActivity() {
+        Intent i = new Intent(getApplicationContext(), FilterActivity.class);
+        startActivity(i);
     }
 }
