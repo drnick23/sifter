@@ -58,7 +58,8 @@ public class SearchActivity extends AppCompatActivity {
         gvResults.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
-                fetchAndAppendArticles(page);
+                // scroll listener paginates starting at 1, the nytimes api paginates starting at 0
+                fetchAndAppendArticles(page-1);
                 return true;
             }
         });

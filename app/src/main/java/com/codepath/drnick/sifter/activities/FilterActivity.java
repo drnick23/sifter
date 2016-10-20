@@ -90,18 +90,19 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
 
     @OnClick(R.id.etBeginDate)
     public void showDatePickerDialog(View v) {
-        Log.d("DEBUG", "TODO: date picker fragment");
-        //DatePickerFragment newFragment = new DatePickerFragment();
-        //newFragment.show(getSupportFragmentManager(), "datePicker");
-    }
+        Log.d("DEBUG", "open date picker dialogue");
+        DatePickerDialog dialog = new DatePickerDialog(this,
+                this, 2015, 1, 1);
+        dialog.show();
+   }
 
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         // when setting date, set the search filters now instead of mapping at the end...
         //etBeginDate.setText(month+"/"+dayOfMonth+"/"+year);
-        searchFilters.setBeginDate(year,month,dayOfMonth);
-        etBeginDate.setText(searchFilters.getBeginDateForQuery());
+        searchFilters.setBeginDate(year,month+1,dayOfMonth);
+        etBeginDate.setText(searchFilters.getBeginDateForUserDisplay());
     }
 
     @OnClick(R.id.btSave)
