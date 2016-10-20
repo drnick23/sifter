@@ -21,6 +21,7 @@ import com.codepath.drnick.sifter.models.SearchFilters;
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -85,14 +86,30 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
         }
         searchFilters.setSort(spSortOrder.getSelectedItem().toString());
         searchFilters.setNewsDesk(news);
-        searchFilters.setBeginDate(null);
     }
 
     @OnClick(R.id.etBeginDate)
     public void showDatePickerDialog(View v) {
+        int year;
+        int month;
+        int day;
+
         Log.d("DEBUG", "open date picker dialogue");
+        if (searchFilters.getBeginDate() != null) {
+            Calendar c = searchFilters.getBeginDate();
+            year = c.get(Calendar.YEAR);
+            month = c.get(Calendar.MONTH);
+            day = c.get(Calendar.DAY_OF_MONTH);
+
+        } else {
+            // let's default a date picker to a year ago if user hasn't set it.
+            Calendar c = Calendar.getInstance();
+            year = c.get(Calendar.YEAR)-1;
+            month = c.get(Calendar.MONTH);
+            day = c.get(Calendar.DAY_OF_MONTH);
+        }
         DatePickerDialog dialog = new DatePickerDialog(this,
-                this, 2015, 1, 1);
+                this, year, month, day);
         dialog.show();
    }
 
@@ -101,7 +118,7 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         // when setting date, set the search filters now instead of mapping at the end...
         //etBeginDate.setText(month+"/"+dayOfMonth+"/"+year);
-        searchFilters.setBeginDate(year,month+1,dayOfMonth);
+        searchFilters.setBeginDate(year,month,dayOfMonth);
         etBeginDate.setText(searchFilters.getBeginDateForUserDisplay());
     }
 

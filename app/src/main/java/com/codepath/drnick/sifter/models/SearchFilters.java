@@ -7,7 +7,6 @@ import org.parceler.Parcel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -17,20 +16,19 @@ import java.util.Locale;
 @Parcel
 public class SearchFilters {
 
-    public Date getBeginDate() {
+    public Calendar getBeginDate() {
         return beginDate;
     }
 
-    public void setBeginDate(Date beginDate) {
+    public void setBeginDate(Calendar beginDate) {
         this.beginDate = beginDate;
     }
 
     public void setBeginDate(int year, int month, int dayOfMonth) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        beginDate = calendar.getTime();
+        beginDate = Calendar.getInstance();
+        beginDate.set(Calendar.MONTH, month);
+        beginDate.set(Calendar.YEAR, year);
+        beginDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
     }
 
     public void setSort(String sort) {
@@ -56,22 +54,22 @@ public class SearchFilters {
 
     public String getBeginDateForQuery() {
         java.text.DateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-        return df.format(beginDate);
+        return df.format(beginDate.getTime());
     }
 
     public String getBeginDateForUserDisplay() {
         if (beginDate == null) {
             return "";
         }
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(beginDate);
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        return month + "/" + day + "/" + year;
+        int year = beginDate.get(Calendar.YEAR);
+        int month = beginDate.get(Calendar.MONTH);
+        int day = beginDate.get(Calendar.DAY_OF_MONTH);
+        SimpleDateFormat format = new SimpleDateFormat("EEE, MMMM d, ''yy");
+        return format.format(beginDate.getTime());
+        //return month + "/" + day + "/" + year;
     }
 
-    Date beginDate;
+    Calendar beginDate;
     String sort;
     ArrayList<String> newsDesk;
 

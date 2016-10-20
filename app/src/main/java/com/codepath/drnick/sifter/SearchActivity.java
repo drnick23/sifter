@@ -158,8 +158,12 @@ public class SearchActivity extends AppCompatActivity {
 
         // now handle any recognized results
         if (requestCode == LAUNCH_FILTER_ACITIVTY_REQUEST_CODE) {
+            // TODO: could detect if search settings actually did change or not
             searchFilters = (SearchFilters) Parcels.unwrap(data.getParcelableExtra("searchFilters"));
             Toast.makeText(this, "Updated search settings", Toast.LENGTH_LONG).show();
+            articleList.clear();
+            adapter.notifyDataSetChanged();
+            fetchAndAppendArticles(0);
         }
     }
 

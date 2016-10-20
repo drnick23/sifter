@@ -34,13 +34,15 @@ public class NYTRestClient {
         params.put("q",request.getQuery());
         params.put("page",request.getPage());
 
-
         SearchFilters filter = request.getSearchFilters();
         if (filter != null) {
             params.put("sort", filter.getSort());
         }
         if (filter.getNewsDesk().size() > 0) {
             params.put("fq", filter.getNewsDeskForQuery());
+        }
+        if (filter.getBeginDate() != null) {
+            params.put("begin_date", filter.getBeginDateForQuery());
         }
 
         Log.d("DEBUG", "params: "+params.toString());
