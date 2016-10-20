@@ -46,13 +46,26 @@ public class FilterActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         searchFilters = (SearchFilters) Parcels.unwrap(getIntent().getParcelableExtra("searchFilters"));
-        setSpinnerToValue(spSortOrder, searchFilters.getSort());
 
+        mapInputsToSearchFilter();
 
     }
 
-    @OnClick(R.id.btSave)
-    public void onSave() {
+    void mapInputsToSearchFilter() {
+        setSpinnerToValue(spSortOrder, searchFilters.getSort());
+        for (String news : searchFilters.getNewsDesk()) {
+            Log.d("DEBUG", "news item: " + news);
+            if (news.equals("arts")) {
+                cbArts.setChecked(true);
+            } else if (news.equals("fashion")) {
+                cbFashion.setChecked(true);
+            } else if (news.equals("sports")) {
+                cbSports.setChecked(true);
+            }
+        }
+    }
+
+    void mapSearchFilterToInputs() {
         // update the searchFilter based on all our inputs
         ArrayList<String> news = new ArrayList<>();
         if (cbArts.isChecked()) {
@@ -65,7 +78,13 @@ public class FilterActivity extends AppCompatActivity {
             news.add("sports");
         }
         searchFilters.setSort(spSortOrder.getSelectedItem().toString());
+        searchFilters.setNewsDesk(news);
+        searchFilters.setBeginDate(null);
+    }
 
+    @OnClick(R.id.btSave)
+    public void onSave() {
+        mapSearchFilterToInputs();
         // passback data
         Intent data = new Intent();
         data.putExtra("searchFilters", Parcels.wrap(searchFilters));

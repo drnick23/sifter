@@ -1,5 +1,7 @@
 package com.codepath.drnick.sifter.models;
 
+import android.text.TextUtils;
+
 import org.parceler.Parcel;
 
 import java.util.ArrayList;
@@ -35,13 +37,18 @@ public class SearchFilters {
         return newsDesk;
     }
 
+    public String getNewsDeskForQuery() {
+        String spacedQuotedItems = "\""+ TextUtils.join("\" \"", newsDesk)+"\"";
+        return "news_desk:("+spacedQuotedItems+")";
+    }
+
     String beginDate;
     String sort;
     ArrayList<String> newsDesk;
 
     public SearchFilters() {
         beginDate = "";
-        sort = "oldest";
+        sort = "newest";
         newsDesk = new ArrayList<>();
     }
 

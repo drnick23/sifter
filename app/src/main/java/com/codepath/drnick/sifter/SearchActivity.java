@@ -136,7 +136,6 @@ public class SearchActivity extends AppCompatActivity {
     //
     private final int LAUNCH_FILTER_ACITIVTY_REQUEST_CODE = 101;
 
-
     public void launchArticleActivity(Article article) {
         Intent i = new Intent(getApplicationContext(), ArticleActivity.class);
         i.putExtra("article", Parcels.wrap(article));
