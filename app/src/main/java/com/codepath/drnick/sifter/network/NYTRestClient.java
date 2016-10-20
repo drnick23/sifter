@@ -27,6 +27,11 @@ public class NYTRestClient {
 
     public static void fetchArticles(FetchArticlesRequest request, final FetchArticlesCallback callback) {
 
+        if (!NetworkUtils.isOnline()) {
+            callback.onError(new Error("Not connected to internet"));
+            return;
+        }
+
         String url = BASE_URL+"articlesearch.json";
 
         RequestParams params = new RequestParams();

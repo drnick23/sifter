@@ -1,5 +1,6 @@
 package com.codepath.drnick.sifter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -119,6 +120,8 @@ public class SearchActivity extends AppCompatActivity {
 
         Log.d("DEBUG","Query: "+query+" page:"+page);
 
+        final Context ctx = this;
+
         NYTRestClient.fetchArticles(request, new FetchArticlesCallback() {
             @Override
             public void onSuccess(ArrayList<Article> articleList) {
@@ -127,7 +130,8 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onError(Error error) {
-                Log.d("ERROR","Problem fetching articles");
+                Log.d("ERROR",error.getMessage());
+                Toast.makeText(ctx, error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
