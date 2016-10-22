@@ -79,4 +79,12 @@ public class SearchFilters {
         newsDesk = new ArrayList<>();
     }
 
+    static public SearchFilters clone(SearchFilters filter) {
+        SearchFilters clone = new SearchFilters();
+        clone.setSort(filter.sort);
+        clone.setNewsDesk(filter.newsDesk);
+        clone.setBeginDate(filter.beginDate);
+        return clone;
+    }
+
 }

@@ -27,6 +27,17 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
     private ArrayList<Article> articles;
     private Context mContext;
 
+    // Define listener member variable
+    private OnArticlesAdapterListener aaListener;
+    public void setOnArticlesAdapterListener(OnArticlesAdapterListener listener) {
+        this.aaListener = listener;
+    }
+
+    // Define the listener interface
+    public interface OnArticlesAdapterListener {
+        void onArticleClick(Article article);
+    }
+
     // Pass in the articles array into the constructor
     public ArticlesAdapter(Context context, ArrayList<Article> articleList) {
         articles = articleList;
@@ -38,7 +49,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         return mContext;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tvTitle)
         TextView tvTitle;
         @BindView(R.id.ivThumbnail)
@@ -47,6 +58,18 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (aaListener != null) {
+                        int position = getAdapterPosition();
+                        if (aaListener != null && position != RecyclerView.NO_POSITION) {
+                            aaListener.onArticleClick(articles.get(position));
+                        }
+                    }
+                }
+            });
         }
     }
 

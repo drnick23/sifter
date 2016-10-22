@@ -37,7 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements FiltersDialogFragment.OnFiltersDialogListener, ArticlesAdapter.OnArticlesAdapterListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -74,6 +74,8 @@ public class SearchActivity extends AppCompatActivity {
         articleList = new ArrayList<>();
 
         articlesAdapter = new ArticlesAdapter(this, articleList);
+        articlesAdapter.setOnArticlesAdapterListener(this);
+
         rvArticles.setAdapter(articlesAdapter);
 
         // First param is number of columns and second param is orientation i.e Vertical or Horizontal
@@ -94,8 +96,8 @@ public class SearchActivity extends AppCompatActivity {
         // this will set to visible after our first search
         rvArticles.setVisibility(View.GONE);
 
-        // setup with initial articles
-        //dfonArticleSearch("election");
+        // setup with initial articles, easier for testing
+        onArticleSearch("election");
     }
 
     /*@OnItemClick(R.id.gvResults)
@@ -209,6 +211,7 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    
     //
     // Activity Launchers
     //
@@ -221,11 +224,11 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void launchFilterActivity() {
-        Boolean useFragment = false;
+        Boolean useFragment = true;
 
         if (useFragment) {
             FragmentManager fm = getSupportFragmentManager();
-            FiltersDialogFragment fragment = FiltersDialogFragment.newInstance("Filters");
+            FiltersDialogFragment fragment = FiltersDialogFragment.newInstance("Filters", searchFilters);
             fragment.show(fm, "filter");
         }
         else {
@@ -235,6 +238,9 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
+    //
+    // Results from child activities/delegates
+    //
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // ignore any results that were cancelled
@@ -253,4 +259,17 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onSearchFiltersSaved(SearchFilters filters) {
+        searchFilters = filters;
+        Toast.makeText(this, "Updated search settings", Toast.LENGTH_LONG).show();
+        articleList.clear();
+        //adapter.notifyDataSetChanged();
+        fetchAndAppendArticles(0);
+    }
+
+    // callback from articles adapter
+    public void onArticleClick(Article article) {
+        launchArticleActivity(article);
+    }
 }
