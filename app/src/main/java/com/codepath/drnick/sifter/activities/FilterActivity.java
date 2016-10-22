@@ -36,6 +36,7 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
     @BindView(R.id.cbArts) CheckBox cbArts;
     @BindView(R.id.cbFashion) CheckBox cbFashion;
     @BindView(R.id.cbSports) CheckBox cbSports;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     // passed in using intent
     SearchFilters searchFilters;
@@ -44,11 +45,10 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Search Filter");
-
-        ButterKnife.bind(this);
 
         searchFilters = (SearchFilters) Parcels.unwrap(getIntent().getParcelableExtra("searchFilters"));
 
