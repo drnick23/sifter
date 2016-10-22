@@ -44,6 +44,9 @@ public class SearchActivity extends AppCompatActivity {
     SearchFilters searchFilters;
     ArticleArrayAdapter adapter;
 
+    // our current search query
+    private String query;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,13 +128,18 @@ public class SearchActivity extends AppCompatActivity {
     public void onArticleSearch(String query) {
         Log.d("DEBUG","onArticleSearch");
         Toast.makeText(this, "search for "+query, Toast.LENGTH_LONG).show();
+
+        if (this.query != null && this.query.equals(query)) {
+            // no change in query so do nothing
+            return;
+        }
+        this.query = query;
         articleList.clear();
         adapter.notifyDataSetChanged();
         fetchAndAppendArticles(0);
     }
 
     public void fetchAndAppendArticles(int page) {
-        String query = etQuery.getText().toString();
 
         FetchArticlesRequest request = new FetchArticlesRequest();
         request.setQuery(query);
