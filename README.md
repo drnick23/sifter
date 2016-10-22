@@ -7,7 +7,7 @@ Time spent: 17 hours spent in total
 - Parcel, Intents, Toolbar: 2 hours
 - Filter, Pagination, Networking: 4 hours
 - Filter date & picker, network utils: 1.5 hours
-- Searchbar, Share, 50% Fragments, Recycler: 4 hours
+- Searchbar, Share, initial Fragments, Recycler: 4 hours
 - Fragments & debugging woes, click handler for Recycler: 2 hours
 
 ## User Stories
