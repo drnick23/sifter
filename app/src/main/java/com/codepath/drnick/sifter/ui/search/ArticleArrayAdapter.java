@@ -22,7 +22,11 @@ import butterknife.ButterKnife;
 /**
  * Created by nick on 10/19/16.
  */
+/*
 
+THIS CLASS IS FOR REFERENCE, WAS REPLACED WITH THE RECYCLERVIEW
+
+ */
 public class ArticleArrayAdapter extends ArrayAdapter<Article> {
 
     public ArticleArrayAdapter(Context context, List<Article> articleList) {

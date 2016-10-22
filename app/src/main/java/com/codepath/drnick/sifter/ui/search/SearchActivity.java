@@ -15,10 +15,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import com.codepath.drnick.sifter.R;
@@ -37,7 +35,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnItemClick;
+import butterknife.OnClick;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -50,17 +48,18 @@ public class SearchActivity extends AppCompatActivity {
     @BindView(R.id.btnSearch)
     Button btnSearch;
 
-    @BindView(R.id.gvResults)
-    GridView gvResults;
-
     @BindView(R.id.rvArticles)
     RecyclerView rvArticles;
 
+    SearchView searchView;
+
     ArrayList<Article> articleList;
+    ArticlesAdapter articlesAdapter;
+
     SearchFilters searchFilters;
-    ArticleArrayAdapter adapter;
 
     // our current search query
+    private boolean didFirstSearch = false;
     private String query;
 
     @Override
@@ -73,11 +72,8 @@ public class SearchActivity extends AppCompatActivity {
 
         searchFilters = new SearchFilters();
         articleList = new ArrayList<>();
-        adapter = new ArticleArrayAdapter(this, articleList);
-        gvResults.setAdapter(adapter);
-        gvResults.setVisibility(View.GONE);
 
-        ArticlesAdapter articlesAdapter = new ArticlesAdapter(this, articleList);
+        articlesAdapter = new ArticlesAdapter(this, articleList);
         rvArticles.setAdapter(articlesAdapter);
 
         // First param is number of columns and second param is orientation i.e Vertical or Horizontal
@@ -95,16 +91,19 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
+        // this will set to visible after our first search
+        rvArticles.setVisibility(View.GONE);
+
         // setup with initial articles
-        onArticleSearch("election");
+        //dfonArticleSearch("election");
     }
 
-    @OnItemClick(R.id.gvResults)
+    /*@OnItemClick(R.id.gvResults)
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Log.d("DEBUG","onItemClick");
         // launch new activity with article
         launchArticleActivity(articleList.get(position));
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -113,7 +112,7 @@ public class SearchActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu_search, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -152,7 +151,15 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
-    //@OnClick(R.id.btnSearch)
+    @OnClick(R.id.btnSearch)
+    public void onButtonSearch() {
+        Log.d("DEBUG", "on button search");
+        String query = etQuery.getText().toString();
+        //hillaonArticleSearch(query);
+        searchView.setQuery(query, true);
+    }
+
+
     public void onArticleSearch(String query) {
         Log.d("DEBUG","onArticleSearch");
         Toast.makeText(this, "search for "+query, Toast.LENGTH_LONG).show();
@@ -161,9 +168,17 @@ public class SearchActivity extends AppCompatActivity {
             // no change in query so do nothing
             return;
         }
+
+        if (!didFirstSearch) {
+            didFirstSearch = true;
+            rvArticles.setVisibility(View.VISIBLE);
+            btnSearch.setVisibility(View.GONE);
+            etQuery.setVisibility(View.GONE);
+        }
+
         this.query = query;
         articleList.clear();
-        adapter.notifyDataSetChanged();
+        //articlesAdapter.notifyDataSetChanged();
         fetchAndAppendArticles(0);
     }
 
@@ -180,8 +195,10 @@ public class SearchActivity extends AppCompatActivity {
 
         NYTRestClient.fetchArticles(request, new FetchArticlesCallback() {
             @Override
-            public void onSuccess(ArrayList<Article> articleList) {
-                adapter.addAll(articleList);
+            public void onSuccess(ArrayList<Article> list) {
+                //adapter.addAll(articleList);
+                articleList.addAll(list);
+                articlesAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -231,7 +248,7 @@ public class SearchActivity extends AppCompatActivity {
             searchFilters = (SearchFilters) Parcels.unwrap(data.getParcelableExtra("searchFilters"));
             Toast.makeText(this, "Updated search settings", Toast.LENGTH_LONG).show();
             articleList.clear();
-            adapter.notifyDataSetChanged();
+            //adapter.notifyDataSetChanged();
             fetchAndAppendArticles(0);
         }
     }
