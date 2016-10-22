@@ -30,9 +30,12 @@ public class ArticleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
-        setSupportActionBar(toolbar);
-
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Article");
+        //toolbar.setTitle("Article"); // why doesn't this do the same thing as above?
+
         final Article article = (Article) Parcels.unwrap(getIntent().getParcelableExtra("article"));
 
         // TODO: finish video...

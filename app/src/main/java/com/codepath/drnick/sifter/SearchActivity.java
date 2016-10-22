@@ -3,6 +3,7 @@ package com.codepath.drnick.sifter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import com.codepath.drnick.sifter.activities.ArticleActivity;
 import com.codepath.drnick.sifter.activities.FilterActivity;
+import com.codepath.drnick.sifter.fragments.FiltersDialogFragment;
 import com.codepath.drnick.sifter.models.SearchFilters;
 import com.codepath.drnick.sifter.network.FetchArticlesCallback;
 import com.codepath.drnick.sifter.network.FetchArticlesRequest;
@@ -178,9 +180,18 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void launchFilterActivity() {
-        Intent i = new Intent(getApplicationContext(), FilterActivity.class);
-        i.putExtra("searchFilters", Parcels.wrap(searchFilters));
-        startActivityForResult(i,LAUNCH_FILTER_ACITIVTY_REQUEST_CODE);
+        Boolean useFragment = false;
+
+        if (useFragment) {
+            FragmentManager fm = getSupportFragmentManager();
+            FiltersDialogFragment fragment = FiltersDialogFragment.newInstance("Filters");
+            fragment.show(fm, "filter");
+        }
+        else {
+            Intent i = new Intent(getApplicationContext(), FilterActivity.class);
+            i.putExtra("searchFilters", Parcels.wrap(searchFilters));
+            startActivityForResult(i, LAUNCH_FILTER_ACITIVTY_REQUEST_CODE);
+        }
     }
 
     @Override
