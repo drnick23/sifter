@@ -2,12 +2,13 @@
 
 Sifter is an android app that allows a user to search for articles on web using simple filters. The app utilizes [New York Times Search API](http://developer.nytimes.com/docs/read/article_search_api_v2).
 
-Time spent: 15 hours spent in total
+Time spent: 17 hours spent in total
 - First session: 2.5 hours
 - Parcel, Intents, Toolbar: 2 hours
 - Filter, Pagination, Networking: 4 hours
 - Filter date & picker, network utils: 1.5 hours
 - Searchbar, Share, 50% Fragments, Recycler: 4 hours
+- Fragments & debugging woes, click handler for Recycler: 2 hours
 
 ## User Stories
 
