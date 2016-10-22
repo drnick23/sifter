@@ -137,9 +137,9 @@ public class FiltersDialogFragment extends DialogFragment implements  DatePicker
             day = c.get(Calendar.DAY_OF_MONTH);
         }
         DatePickerFragment newFragment = new DatePickerFragment();
-        //newFragment.setTargetFragment(FiltersDialogFragment.this, 99);
+        newFragment.setTargetFragment(FiltersDialogFragment.this, 99);
 
-        newFragment.show(getActivity().getFragmentManager(), "datePicker");
+        newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
 
     }
 
