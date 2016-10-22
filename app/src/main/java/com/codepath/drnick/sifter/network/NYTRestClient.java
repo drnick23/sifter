@@ -2,7 +2,7 @@ package com.codepath.drnick.sifter.network;
 
 import android.util.Log;
 
-import com.codepath.drnick.sifter.Article;
+import com.codepath.drnick.sifter.models.Article;
 import com.codepath.drnick.sifter.models.SearchFilters;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;

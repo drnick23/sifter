@@ -1,6 +1,6 @@
 package com.codepath.drnick.sifter.network;
 
-import com.codepath.drnick.sifter.Article;
+import com.codepath.drnick.sifter.models.Article;
 
 import java.util.ArrayList;
 

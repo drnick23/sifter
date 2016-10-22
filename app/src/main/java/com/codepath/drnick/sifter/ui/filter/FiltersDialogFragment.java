@@ -1,12 +1,13 @@
-package com.codepath.drnick.sifter.activities;
+package com.codepath.drnick.sifter.ui.filter;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -18,10 +19,7 @@ import android.widget.SpinnerAdapter;
 import com.codepath.drnick.sifter.R;
 import com.codepath.drnick.sifter.models.SearchFilters;
 
-import org.parceler.Parcels;
-
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +27,11 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
 
-public class FilterActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+/**
+ * Created by nick on 10/21/16.
+ */
+
+public class FiltersDialogFragment extends DialogFragment implements  DatePickerDialog.OnDateSetListener {
 
     @BindView(R.id.etBeginDate) EditText etBeginDate;
     @BindView(R.id.spSortOrder) Spinner spSortOrder;
@@ -40,19 +42,38 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
     // passed in using intent
     SearchFilters searchFilters;
 
+    public FiltersDialogFragment() {
+
+    }
+
+    public static FiltersDialogFragment newInstance(String title) {
+        FiltersDialogFragment frag = new FiltersDialogFragment();
+        Bundle args = new Bundle();
+        args.putString("title", title);
+        frag.setArguments(args);
+        return frag;
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_filter);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Search Filter");
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_filter, container, false);
+        //ButterKnife.bind(view);
+        return view;
+    }
 
-        ButterKnife.bind(this);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
+        // Fetch arguments from bundle and set title
+        String title = getArguments().getString("title", "Search Filters");
+        getDialog().setTitle(title);
 
-        searchFilters = (SearchFilters) Parcels.unwrap(getIntent().getParcelableExtra("searchFilters"));
+        cbArts.setChecked(true);
 
-        mapSearchFilterIntoInputs();
+        //searchFilters = (SearchFilters) Parcels.unwrap(getIntent().getParcelableExtra("searchFilters"));
+        //mapSearchFilterIntoInputs();
 
     }
 
@@ -95,7 +116,7 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
         int day;
 
         Log.d("DEBUG", "open date picker dialogue");
-        if (searchFilters.getBeginDate() != null) {
+        /*if (searchFilters.getBeginDate() != null) {
             Calendar c = searchFilters.getBeginDate();
             year = c.get(Calendar.YEAR);
             month = c.get(Calendar.MONTH);
@@ -110,8 +131,8 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
         }
         DatePickerDialog dialog = new DatePickerDialog(this,
                 this, year, month, day);
-        dialog.show();
-   }
+        dialog.show();*/
+    }
 
 
     @Override
@@ -125,11 +146,11 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
     @OnClick(R.id.btSave)
     public void onSave() {
         mapInputsIntoSearchFilter();
-        // passback data
+        /*// passback data
         Intent data = new Intent();
         data.putExtra("searchFilters", Parcels.wrap(searchFilters));
-        setResult(RESULT_OK, data);
-        finish();
+        setResult(RESULT_OK, data);*/
+        dismiss();
     }
 
     @OnCheckedChanged({ R.id.cbArts, R.id.cbFashion, R.id.cbSports})
@@ -139,7 +160,7 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
 
     @OnItemSelected(R.id.spSortOrder)
     public void onSpinnerSelected(AdapterView<?> parent, View view,
-                               int pos, long id) {
+                                  int pos, long id) {
         Log.d("DEBUG","selected spinner pos "+pos);
         // whereas we could update searchFilters on the fly, it's simpler and cleaner to do it on save
     }

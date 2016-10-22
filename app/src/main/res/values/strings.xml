@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Sifter</string>
     <string name="action_settings">Settings</string>
-    <string name="search_hint">Enter search query</string>
+    <string name="search_hint">Start your search</string>
     <string name="title_activity_article">ArticleActivity</string>
     <string name="title_activity_filter">FilterActivity</string>
     <string name="begin_date">Begin Date</string>
