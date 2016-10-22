@@ -37,7 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SearchActivity extends AppCompatActivity implements FiltersDialogFragment.OnFiltersDialogListener {
+public class SearchActivity extends AppCompatActivity implements FiltersDialogFragment.OnFiltersDialogListener, ArticlesAdapter.OnArticlesAdapterListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -74,6 +74,8 @@ public class SearchActivity extends AppCompatActivity implements FiltersDialogFr
         articleList = new ArrayList<>();
 
         articlesAdapter = new ArticlesAdapter(this, articleList);
+        articlesAdapter.setOnArticlesAdapterListener(this);
+
         rvArticles.setAdapter(articlesAdapter);
 
         // First param is number of columns and second param is orientation i.e Vertical or Horizontal
@@ -94,8 +96,8 @@ public class SearchActivity extends AppCompatActivity implements FiltersDialogFr
         // this will set to visible after our first search
         rvArticles.setVisibility(View.GONE);
 
-        // setup with initial articles
-        //dfonArticleSearch("election");
+        // setup with initial articles, easier for testing
+        onArticleSearch("election");
     }
 
     /*@OnItemClick(R.id.gvResults)
@@ -209,15 +211,7 @@ public class SearchActivity extends AppCompatActivity implements FiltersDialogFr
         });
     }
 
-    // fragments
-
-    // attach to an onclick handler to show the date picker
-    /*public void showDatePickerDialog(View v) {
-        DatePickerFragment newFragment = new DatePickerFragment();
-        newFragment.show(this.getSupportFragmentManager(), "datePicker");
-    }*/
-
-
+    
     //
     // Activity Launchers
     //
@@ -245,7 +239,7 @@ public class SearchActivity extends AppCompatActivity implements FiltersDialogFr
     }
 
     //
-    // Results from child activities
+    // Results from child activities/delegates
     //
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -272,5 +266,10 @@ public class SearchActivity extends AppCompatActivity implements FiltersDialogFr
         articleList.clear();
         //adapter.notifyDataSetChanged();
         fetchAndAppendArticles(0);
+    }
+
+    // callback from articles adapter
+    public void onArticleClick(Article article) {
+        launchArticleActivity(article);
     }
 }
