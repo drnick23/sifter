@@ -20,12 +20,15 @@ import com.codepath.drnick.sifter.R;
 import com.codepath.drnick.sifter.models.SearchFilters;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.OnItemSelected;
+
+//import android.support.v4.app.DialogFragment;
 
 /**
  * Created by nick on 10/21/16.
@@ -42,12 +45,18 @@ public class FiltersDialogFragment extends DialogFragment implements  DatePicker
     // passed in using intent
     SearchFilters searchFilters;
 
+    public interface OnFiltersDialogListener {
+        void onSearchFiltersSaved(SearchFilters filters);
+    }
+
     public FiltersDialogFragment() {
 
     }
 
-    public static FiltersDialogFragment newInstance(String title) {
+    public static FiltersDialogFragment newInstance(String title, SearchFilters filters) {
+
         FiltersDialogFragment frag = new FiltersDialogFragment();
+        frag.searchFilters = SearchFilters.clone(filters);
         Bundle args = new Bundle();
         args.putString("title", title);
         frag.setArguments(args);
@@ -58,7 +67,7 @@ public class FiltersDialogFragment extends DialogFragment implements  DatePicker
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_filter, container, false);
-        //ButterKnife.bind(view);
+        //ButterKnife.bind(this, view);
         return view;
     }
 
@@ -70,10 +79,8 @@ public class FiltersDialogFragment extends DialogFragment implements  DatePicker
         String title = getArguments().getString("title", "Search Filters");
         getDialog().setTitle(title);
 
-        cbArts.setChecked(true);
-
         //searchFilters = (SearchFilters) Parcels.unwrap(getIntent().getParcelableExtra("searchFilters"));
-        //mapSearchFilterIntoInputs();
+        mapSearchFilterIntoInputs();
 
     }
 
@@ -116,7 +123,7 @@ public class FiltersDialogFragment extends DialogFragment implements  DatePicker
         int day;
 
         Log.d("DEBUG", "open date picker dialogue");
-        /*if (searchFilters.getBeginDate() != null) {
+        if (searchFilters.getBeginDate() != null) {
             Calendar c = searchFilters.getBeginDate();
             year = c.get(Calendar.YEAR);
             month = c.get(Calendar.MONTH);
@@ -129,9 +136,11 @@ public class FiltersDialogFragment extends DialogFragment implements  DatePicker
             month = c.get(Calendar.MONTH);
             day = c.get(Calendar.DAY_OF_MONTH);
         }
-        DatePickerDialog dialog = new DatePickerDialog(this,
-                this, year, month, day);
-        dialog.show();*/
+        DatePickerFragment newFragment = new DatePickerFragment();
+        //newFragment.setTargetFragment(FiltersDialogFragment.this, 99);
+
+        newFragment.show(getActivity().getFragmentManager(), "datePicker");
+
     }
 
 
@@ -146,10 +155,10 @@ public class FiltersDialogFragment extends DialogFragment implements  DatePicker
     @OnClick(R.id.btSave)
     public void onSave() {
         mapInputsIntoSearchFilter();
-        /*// passback data
-        Intent data = new Intent();
-        data.putExtra("searchFilters", Parcels.wrap(searchFilters));
-        setResult(RESULT_OK, data);*/
+
+        OnFiltersDialogListener listener = (OnFiltersDialogListener) getActivity();
+        listener.onSearchFiltersSaved(searchFilters);
+
         dismiss();
     }
 

@@ -37,7 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements FiltersDialogFragment.OnFiltersDialogListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -209,6 +209,15 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    // fragments
+
+    // attach to an onclick handler to show the date picker
+    /*public void showDatePickerDialog(View v) {
+        DatePickerFragment newFragment = new DatePickerFragment();
+        newFragment.show(this.getSupportFragmentManager(), "datePicker");
+    }*/
+
+
     //
     // Activity Launchers
     //
@@ -221,11 +230,11 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void launchFilterActivity() {
-        Boolean useFragment = false;
+        Boolean useFragment = true;
 
         if (useFragment) {
             FragmentManager fm = getSupportFragmentManager();
-            FiltersDialogFragment fragment = FiltersDialogFragment.newInstance("Filters");
+            FiltersDialogFragment fragment = FiltersDialogFragment.newInstance("Filters", searchFilters);
             fragment.show(fm, "filter");
         }
         else {
@@ -235,6 +244,9 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
+    //
+    // Results from child activities
+    //
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // ignore any results that were cancelled
@@ -253,4 +265,12 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onSearchFiltersSaved(SearchFilters filters) {
+        searchFilters = filters;
+        Toast.makeText(this, "Updated search settings", Toast.LENGTH_LONG).show();
+        articleList.clear();
+        //adapter.notifyDataSetChanged();
+        fetchAndAppendArticles(0);
+    }
 }

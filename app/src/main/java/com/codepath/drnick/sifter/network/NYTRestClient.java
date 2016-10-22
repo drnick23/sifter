@@ -41,14 +41,17 @@ public class NYTRestClient {
 
         SearchFilters filter = request.getSearchFilters();
         if (filter != null) {
-            params.put("sort", filter.getSort());
+            if (filter.getSort() != null) {
+                params.put("sort", filter.getSort());
+            }
+            if (filter.getNewsDesk() != null && filter.getNewsDesk().size() > 0) {
+                params.put("fq", filter.getNewsDeskForQuery());
+            }
+            if (filter.getBeginDate() != null) {
+                params.put("begin_date", filter.getBeginDateForQuery());
+            }
         }
-        if (filter.getNewsDesk().size() > 0) {
-            params.put("fq", filter.getNewsDeskForQuery());
-        }
-        if (filter.getBeginDate() != null) {
-            params.put("begin_date", filter.getBeginDateForQuery());
-        }
+
 
         Log.d("DEBUG", "params: "+params.toString());
 

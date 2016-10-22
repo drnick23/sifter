@@ -108,11 +108,11 @@ public class FilterActivity extends AppCompatActivity implements DatePickerDialo
             month = c.get(Calendar.MONTH);
             day = c.get(Calendar.DAY_OF_MONTH);
         }
+
         DatePickerDialog dialog = new DatePickerDialog(this,
                 this, year, month, day);
         dialog.show();
    }
-
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
