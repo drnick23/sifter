@@ -1,4 +1,4 @@
-package com.codepath.drnick.sifter;
+package com.codepath.drnick.sifter.ui.search;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.codepath.drnick.sifter.R;
+import com.codepath.drnick.sifter.models.Article;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

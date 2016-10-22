@@ -1,4 +1,4 @@
-package com.codepath.drnick.sifter;
+package com.codepath.drnick.sifter.ui.search;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -19,13 +21,15 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.codepath.drnick.sifter.activities.ArticleActivity;
-import com.codepath.drnick.sifter.activities.FilterActivity;
-import com.codepath.drnick.sifter.fragments.FiltersDialogFragment;
+import com.codepath.drnick.sifter.R;
+import com.codepath.drnick.sifter.models.Article;
 import com.codepath.drnick.sifter.models.SearchFilters;
 import com.codepath.drnick.sifter.network.FetchArticlesCallback;
 import com.codepath.drnick.sifter.network.FetchArticlesRequest;
 import com.codepath.drnick.sifter.network.NYTRestClient;
+import com.codepath.drnick.sifter.ui.article.ArticleActivity;
+import com.codepath.drnick.sifter.ui.filter.FilterActivity;
+import com.codepath.drnick.sifter.ui.filter.FiltersDialogFragment;
 
 import org.parceler.Parcels;
 
@@ -37,10 +41,20 @@ import butterknife.OnItemClick;
 
 public class SearchActivity extends AppCompatActivity {
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.etQuery) EditText etQuery;
-    @BindView(R.id.btnSearch) Button btnSearch;
-    @BindView(R.id.gvResults) GridView gvResults;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
+    @BindView(R.id.etQuery)
+    EditText etQuery;
+
+    @BindView(R.id.btnSearch)
+    Button btnSearch;
+
+    @BindView(R.id.gvResults)
+    GridView gvResults;
+
+    @BindView(R.id.rvArticles)
+    RecyclerView rvArticles;
 
     ArrayList<Article> articleList;
     SearchFilters searchFilters;
@@ -61,13 +75,23 @@ public class SearchActivity extends AppCompatActivity {
         articleList = new ArrayList<>();
         adapter = new ArticleArrayAdapter(this, articleList);
         gvResults.setAdapter(adapter);
+        gvResults.setVisibility(View.GONE);
 
-        gvResults.setOnScrollListener(new EndlessScrollListener() {
+        ArticlesAdapter articlesAdapter = new ArticlesAdapter(this, articleList);
+        rvArticles.setAdapter(articlesAdapter);
+
+        // First param is number of columns and second param is orientation i.e Vertical or Horizontal
+        StaggeredGridLayoutManager gridLayoutManager =
+                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        // Attach the layout manager to the recycler view
+        rvArticles.setLayoutManager(gridLayoutManager);
+
+        rvArticles.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
-            public boolean onLoadMore(int page, int totalItemsCount) {
-                // scroll listener paginates starting at 1, the nytimes api paginates starting at 0
+            public void onLoadMore(int page, int totalItemsCount) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
                 fetchAndAppendArticles(page-1);
-                return true;
             }
         });
 

@@ -1,4 +1,4 @@
-package com.codepath.drnick.sifter.activities;
+package com.codepath.drnick.sifter.ui.article;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.codepath.drnick.sifter.Article;
+import com.codepath.drnick.sifter.models.Article;
 import com.codepath.drnick.sifter.R;
 
 import org.parceler.Parcels;

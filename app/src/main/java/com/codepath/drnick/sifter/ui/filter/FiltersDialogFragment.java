@@ -1,4 +1,4 @@
-package com.codepath.drnick.sifter.fragments;
+package com.codepath.drnick.sifter.ui.filter;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;

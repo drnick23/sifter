@@ -1,4 +1,4 @@
-package com.codepath.drnick.sifter;
+package com.codepath.drnick.sifter.ui.search;
 
 import android.widget.AbsListView;
 

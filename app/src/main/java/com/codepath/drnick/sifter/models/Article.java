@@ -1,4 +1,4 @@
-package com.codepath.drnick.sifter;
+package com.codepath.drnick.sifter.models;
 
 import org.json.JSONArray;
 import org.json.JSONException;

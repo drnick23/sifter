@@ -1,4 +1,4 @@
-package com.codepath.drnick.sifter.activities;
+package com.codepath.drnick.sifter.ui.filter;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
