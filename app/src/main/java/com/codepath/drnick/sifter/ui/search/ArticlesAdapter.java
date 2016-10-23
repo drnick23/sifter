@@ -27,9 +27,9 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private ArrayList<Article> articles;
     private Context mContext;
 
-    public static int ARTICLE_TYPE_STANDARD = 1;
-    public static int ARTICLE_TYPE_HEADLINE = 2;
-    public static int ARTICLE_TYPE_FEATURE = 3;
+    public static int ARTICLE_TYPE_STANDARD = 0;
+    public static int ARTICLE_TYPE_HEADLINE = 1;
+    public static int ARTICLE_TYPE_FEATURE = 2;
 
     // Define listener member variable
     private OnArticlesAdapterListener aaListener;
@@ -48,14 +48,13 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         mContext = context;
     }
 
-
-
     // Easy access to the context object in the recyclerview
     private Context getContext() {
         return mContext;
     }
 
-    // base class for our different article views
+    // base class for our different article views that setups up the click listeners
+    // and also provides a configure function
     public abstract class BaseArticleViewHolder extends RecyclerView.ViewHolder {
 
         public BaseArticleViewHolder(View itemView) {
@@ -128,7 +127,6 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -155,6 +153,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        // simply get the article and call the base class configure for said article
         Article article = articles.get(position);
         ((BaseArticleViewHolder) holder).configure(article);
     }
@@ -167,7 +166,8 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (article.getThumbnail() == null || article.getThumbnail()=="") {
             return ARTICLE_TYPE_HEADLINE;
         }
-        int alternate = position % 3; // feature every 3rd article for fun.
+        // feature every 3rd article for fun and profit.
+        int alternate = position % 3;
         if (alternate == 0) {
             return ARTICLE_TYPE_FEATURE;
         }
