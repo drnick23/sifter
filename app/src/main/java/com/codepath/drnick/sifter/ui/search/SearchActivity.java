@@ -211,7 +211,7 @@ public class SearchActivity extends AppCompatActivity implements FiltersDialogFr
         });
     }
 
-    
+
     //
     // Activity Launchers
     //

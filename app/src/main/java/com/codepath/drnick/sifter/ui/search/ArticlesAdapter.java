@@ -22,10 +22,14 @@ import butterknife.ButterKnife;
  * Created by nick on 10/21/16.
  */
 
-public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHolder> {
+public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<Article> articles;
     private Context mContext;
+
+    public static int ARTICLE_TYPE_STANDARD = 0;
+    public static int ARTICLE_TYPE_HEADLINE = 1;
+    public static int ARTICLE_TYPE_FEATURE = 2;
 
     // Define listener member variable
     private OnArticlesAdapterListener aaListener;
@@ -49,13 +53,11 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         return mContext;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.tvTitle)
-        TextView tvTitle;
-        @BindView(R.id.ivThumbnail)
-        ImageView ivThumbnail;
+    // base class for our different article views that setups up the click listeners
+    // and also provides a configure function
+    public abstract class BaseArticleViewHolder extends RecyclerView.ViewHolder {
 
-        public ViewHolder(View itemView) {
+        public BaseArticleViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -71,29 +73,105 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
                 }
             });
         }
+
+        public abstract void configure(Article article);
+
+    }
+
+    public class StandardArticleViewHolder extends BaseArticleViewHolder {
+        @BindView(R.id.tvTitle)
+        TextView tvTitle;
+        @BindView(R.id.ivThumbnail)
+        ImageView ivThumbnail;
+
+        public StandardArticleViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        public void configure(Article article) {
+            tvTitle.setText(article.getHeadline());
+            if (!TextUtils.isEmpty(article.getThumbnail())) {
+                Glide.with(getContext()).load(article.getThumbnail()).into(ivThumbnail);
+            }
+        }
+    }
+
+    public class HeadlineArticleViewHolder extends BaseArticleViewHolder {
+        @BindView(R.id.tvTitle)
+        TextView tvTitle;
+
+        public HeadlineArticleViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        public void configure(Article article) {
+            tvTitle.setText(article.getHeadline());
+        }
+    }
+
+    public class FeatureArticleViewHolder extends BaseArticleViewHolder {
+        @BindView(R.id.tvTitle)
+        TextView tvTitle;
+        @BindView(R.id.ivThumbnail)
+        ImageView ivThumbnail;
+
+        public FeatureArticleViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        public void configure(Article article) {
+            tvTitle.setText(article.getHeadline());
+            if (!TextUtils.isEmpty(article.getThumbnail())) {
+                Glide.with(getContext()).load(article.getThumbnail()).into(ivThumbnail);
+            }
+        }
     }
 
     @Override
-    public ArticlesAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
+        RecyclerView.ViewHolder viewHolder;
 
         // Inflate the custom layout
-        View contactView = inflater.inflate(R.layout.item_article_result, parent, false);
+        if (viewType == ARTICLE_TYPE_FEATURE) {
+            View featureArticleResult = inflater.inflate(R.layout.item_article_feature, parent, false);
+            viewHolder = new FeatureArticleViewHolder(featureArticleResult);
+        }
+        else if (viewType == ARTICLE_TYPE_HEADLINE) {
+            View headlineArticleResult = inflater.inflate(R.layout.item_article_headline, parent, false);
+            viewHolder = new HeadlineArticleViewHolder(headlineArticleResult);
+        }
+        else { // ARTICLE_TYPE_STANDARD
+            View standardArticleResult = inflater.inflate(R.layout.item_article_result, parent, false);
+            viewHolder = new StandardArticleViewHolder(standardArticleResult);
+        }
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ArticlesAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        // simply get the article and call the base class configure for said article
         Article article = articles.get(position);
+        ((BaseArticleViewHolder) holder).configure(article);
+    }
 
-        holder.tvTitle.setText(article.getHeadline());
-        if (!TextUtils.isEmpty(article.getThumbnail())) {
-            Glide.with(getContext()).load(article.getThumbnail()).into(holder.ivThumbnail);
+    //private void configureStandardArticleViewHolder()
+
+    @Override
+    public int getItemViewType(int position) {
+        Article article = articles.get(position);
+        if (article.getThumbnail() == null || article.getThumbnail()=="") {
+            return ARTICLE_TYPE_HEADLINE;
         }
+        // feature every 3rd article for fun and profit.
+        int alternate = position % 3;
+        if (alternate == 0) {
+            return ARTICLE_TYPE_FEATURE;
+        }
+        return ARTICLE_TYPE_STANDARD;
     }
 
     @Override
