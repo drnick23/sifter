@@ -60,20 +60,6 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public BaseArticleViewHolder(View itemView) {
             super(itemView);
-        }
-
-        public abstract void configure(Article article);
-
-    }
-
-    public class StandardArticleViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.tvTitle)
-        TextView tvTitle;
-        @BindView(R.id.ivThumbnail)
-        ImageView ivThumbnail;
-
-        public StandardArticleViewHolder(View itemView) {
-            super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -87,6 +73,20 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                 }
             });
+        }
+
+        public abstract void configure(Article article);
+
+    }
+
+    public class StandardArticleViewHolder extends BaseArticleViewHolder {
+        @BindView(R.id.tvTitle)
+        TextView tvTitle;
+        @BindView(R.id.ivThumbnail)
+        ImageView ivThumbnail;
+
+        public StandardArticleViewHolder(View itemView) {
+            super(itemView);
         }
 
         public void configure(Article article) {
@@ -97,25 +97,12 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public class HeadlineArticleViewHolder extends RecyclerView.ViewHolder {
+    public class HeadlineArticleViewHolder extends BaseArticleViewHolder {
         @BindView(R.id.tvTitle)
         TextView tvTitle;
 
         public HeadlineArticleViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Triggers click upwards to the adapter on click
-                    if (aaListener != null) {
-                        int position = getAdapterPosition();
-                        if (aaListener != null && position != RecyclerView.NO_POSITION) {
-                            aaListener.onArticleClick(articles.get(position));
-                        }
-                    }
-                }
-            });
         }
 
         public void configure(Article article) {
@@ -123,7 +110,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public class FeatureArticleViewHolder extends RecyclerView.ViewHolder {
+    public class FeatureArticleViewHolder extends BaseArticleViewHolder {
         @BindView(R.id.tvTitle)
         TextView tvTitle;
         @BindView(R.id.ivThumbnail)
@@ -131,19 +118,6 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public FeatureArticleViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // Triggers click upwards to the adapter on click
-                    if (aaListener != null) {
-                        int position = getAdapterPosition();
-                        if (aaListener != null && position != RecyclerView.NO_POSITION) {
-                            aaListener.onArticleClick(articles.get(position));
-                        }
-                    }
-                }
-            });
         }
 
         public void configure(Article article) {
@@ -182,16 +156,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Article article = articles.get(position);
-
-        if (holder instanceof StandardArticleViewHolder) {
-            ((StandardArticleViewHolder) holder).configure(article);
-        }
-        else if (holder instanceof FeatureArticleViewHolder) {
-            ((FeatureArticleViewHolder) holder).configure(article);
-        }
-        else if (holder instanceof HeadlineArticleViewHolder) {
-            ((HeadlineArticleViewHolder) holder).configure(article);
-        }
+        ((BaseArticleViewHolder) holder).configure(article);
     }
 
     //private void configureStandardArticleViewHolder()
