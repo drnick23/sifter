@@ -2,13 +2,14 @@
 
 Sifter is an android app that allows a user to search for articles on web using simple filters. The app utilizes [New York Times Search API](http://developer.nytimes.com/docs/read/article_search_api_v2).
 
-Time spent: 17 hours spent in total
+Time spent: 18.5 hours spent in total
 - First session: 2.5 hours
 - Parcel, Intents, Toolbar: 2 hours
 - Filter, Pagination, Networking: 4 hours
 - Filter date & picker, network utils: 1.5 hours
 - Searchbar, Share, initial Fragments, Recycler: 4 hours
 - Fragments & debugging woes, click handler for Recycler: 2 hours
+- Heterogenous Recycler views: 1.5 hours
 
 ## User Stories
 
@@ -35,7 +36,7 @@ The following **optional** features are implemented:
 The following **bonus** features are implemented:
 
 * [x] Use the [RecyclerView](http://guides.codepath.com/android/Using-the-RecyclerView) with the `StaggeredGridLayoutManager` to display improve the grid of image results
-* [ ] For different news articles that only have text or only have images, use [Heterogenous Layouts](http://guides.codepath.com/android/Heterogenous-Layouts-inside-RecyclerView) with RecyclerView
+* [x] For different news articles that only have text or only have images, use [Heterogenous Layouts](http://guides.codepath.com/android/Heterogenous-Layouts-inside-RecyclerView) with RecyclerView
 * [x] Use Parcelable instead of Serializable using the popular [Parceler library](http://guides.codepath.com/android/Using-Parceler).
 * [ ] Leverages the [data binding support module](http://guides.codepath.com/android/Applying-Data-Binding-for-Views) to bind data into layout templates.
 * [ ] Replace all icon drawables and other static image assets with [vector drawables](http://guides.codepath.com/android/Drawables#vector-drawables) where appropriate.
@@ -48,6 +49,7 @@ The following **bonus** features are implemented:
 The following **additional** features are implemented:
 
 * [x] Uses Butterknife library
+* [x] Uses an additional heterogenous layout to feature articles
 
 ## Video Walkthrough
 
@@ -60,6 +62,8 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ## Notes
 
 Describe any challenges encountered while building the app.
+* still on a learning curve with Java
+* the support modules caused quite a few compilation errors b/c of some mistakes using the wrong ones.
 
 ## Open-source libraries used
 
