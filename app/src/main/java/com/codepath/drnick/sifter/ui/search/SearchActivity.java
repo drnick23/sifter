@@ -81,6 +81,7 @@ public class SearchActivity extends AppCompatActivity implements FiltersDialogFr
         // First param is number of columns and second param is orientation i.e Vertical or Horizontal
         StaggeredGridLayoutManager gridLayoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        //gridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         // Attach the layout manager to the recycler view
         rvArticles.setLayoutManager(gridLayoutManager);
 
