@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/fragment_vertical_margin"
@@ -14,14 +15,34 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/etBeginDate"
+            android:layout_alignParentTop="true"
+            android:background="#FFCCCC"/>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/ic_past"
+            android:id="@+id/ivBeginDate"
+
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
         <TextView
             android:text="@string/begin_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/tvBeginDate" />
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="3dp"
+            android:id="@+id/tvBeginDate"
+            android:layout_alignBaseline="@id/ivBeginDate"
+            android:layout_toRightOf="@id/ivBeginDate"
+            android:layout_alignTop="@id/ivBeginDate"
+            />
 
         <EditText
             android:layout_width="wrap_content"
@@ -34,29 +55,65 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/spSortOrder"
+            android:layout_alignTop="@+id/ivSort"
+            android:background="#CCFFCC"/>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="32dp"
+            app:srcCompat="@drawable/ic_sort_descending"
+            android:layout_below="@+id/etBeginDate"
+            android:layout_alignLeft="@+id/ivBeginDate"
+            android:id="@+id/ivSort" />
+
         <TextView
             android:text="@string/sort_order"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
             android:id="@+id/tvSortOrder"
-            android:layout_below="@+id/etBeginDate"
-            android:layout_alignLeft="@+id/tvBeginDate" />
+            android:layout_marginBottom="10dp"
+            android:layout_alignLeft="@+id/tvBeginDate"
+            android:layout_alignBottom="@+id/ivSort"
+            />
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/spSortOrder"
             android:entries="@array/sort_order_array"
-            android:layout_below="@+id/tvSortOrder"
-            android:layout_alignLeft="@+id/tvSortOrder" />
+            android:layout_below="@+id/ivSort">
+        </Spinner>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/cbSports"
+            android:layout_alignTop="@+id/ivNews"
+            android:background="#CCCCFF"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            app:srcCompat="@drawable/ic_category"
+            android:layout_below="@+id/spSortOrder"
+            android:layout_alignLeft="@id/ivBeginDate"
+            android:id="@+id/ivNews" />
 
         <TextView
             android:text="@string/news_desk"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/spSortOrder"
-            android:layout_marginTop="20dp"
+            android:layout_alignLeft="@id/tvBeginDate"
+            android:layout_alignBottom="@id/ivNews"
+            android:layout_marginBottom="5dp"
             android:id="@+id/tvNewsDesk" />
 
         <CheckBox
