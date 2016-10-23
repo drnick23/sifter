@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_marginBottom="20dp"
     android:layout_height="wrap_content">
 
     <ImageView
-        android:layout_width="125dp"
-        android:layout_height="125dp"
-        android:scaleType="fitCenter"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
         app:srcCompat="@mipmap/ic_launcher"
         android:id="@+id/ivThumbnail" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/bottom_fade"
+        android:scaleType="fitXY"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/tvTitle"
+        android:layout_marginTop="-60dp"
+        android:layout_alignBottom="@+id/ivThumbnail"
+        android:layout_alignLeft="@id/ivThumbnail"
+        android:layout_alignRight="@+id/ivThumbnail"
+        android:id="@+id/imageView" />
 
     <TextView
         android:text="TextView"
@@ -17,5 +32,21 @@
         android:layout_height="wrap_content"
         android:maxLines="3"
         android:ellipsize="end"
-        android:id="@+id/tvTitle" />
-</LinearLayout>
+        android:id="@+id/tvTitle"
+        android:layout_alignBottom="@+id/ivThumbnail"
+        android:layout_alignRight="@+id/ivThumbnail"
+        android:layout_alignEnd="@+id/ivThumbnail"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="@android:color/white"
+        android:shadowRadius="16"
+        android:shadowColor="@android:color/black"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="6dp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>
